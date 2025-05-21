@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. @SPARK_INSTALL_BINDIR@/spark_profile.sh
+
+echo "Setup SABAT @PROJECT_VERSION@ environment..."
+
+remove_path LD_LIBRARY_PATH @CMAKE_INSTALL_FULL_LIBDIR@
+
+export PATH=@CMAKE_INSTALL_FULL_BINDIR@:$PATH
+export LD_LIBRARY_PATH=@CMAKE_INSTALL_FULL_LIBDIR@:$LD_LIBRARY_PATH
+
+echo "SABAT environment ready!"
