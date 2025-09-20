@@ -25,14 +25,14 @@ public:
         cat_sipm_raw = model()->get_category(SabatCategories::SiPMRaw);
 
         if (cat_sipm_raw == nullptr) {
-            spdlog::critical("[{}] No SabatRaw category", __PRETTY_FUNCTION__);
+            spdlog::critical("[{}] No SiPMRaw category", __PRETTY_FUNCTION__);
             return false;
         }
 
         cat_sipm_cal = model()->build_category<SiPMCal>(SabatCategories::SiPMCal);
 
         if (cat_sipm_cal == nullptr) {
-            spdlog::critical("[{}] Cannot build SabatCal category", __PRETTY_FUNCTION__);
+            spdlog::critical("[{}] Cannot build SiPMCal category", __PRETTY_FUNCTION__);
             return false;
         }
 
@@ -45,6 +45,20 @@ public:
     auto execute() -> bool override
     {
         auto n_objs = cat_sipm_raw->get_entries();
+
+        for (int i = 0; i < n_objs; ++i) {
+            auto loc = cat_sipm_raw->get_locator(i);
+
+            auto raw_obj = cat_sipm_raw->get_object<SiPMRaw>(i);
+
+            auto new_cal_obj = cat_sipm_cal->make_object_unsafe<SiPMCal>(loc);
+
+            new_cal_obj->board = raw_obj->board;
+            new_cal_obj->channel = raw_obj->channel;
+
+            new_cal_obj->toa = raw_obj->toa;
+            new_cal_obj->energy = raw_obj->tot;
+        }
 
         return true;
     }

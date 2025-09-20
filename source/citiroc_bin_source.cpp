@@ -72,6 +72,9 @@ auto bin_source::open() -> bool
 
     spdlog::info("Board ID {:#x} -> vaddr {}", hwid, vaddr);
 
+    if (spdlog::get_level() == spdlog::level::debug) {
+        spdlog::debug("Number of events in file: {}", get_n_events());
+    }
     return true;
 }
 
@@ -82,7 +85,7 @@ auto bin_source::read_current_event() -> bool
     auto* unp = get_unpacker(vaddr);
 
     spdlog::debug("Unpacker = {:p} for {} event {}", (void*)unp, vaddr, get_current_event());
-    unp->execute(get_current_event(), get_current_event(), vaddr, source, 0);
+    return unp->execute(get_current_event(), get_current_event(), vaddr, source, 0);
 
     return true;
 

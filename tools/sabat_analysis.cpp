@@ -20,8 +20,11 @@ auto main(int argc, char** argv) -> int
     CLI::App app {"Sabat DST application"};
     argv = app.ensure_utf8(argv);
 
+    int64_t first_event {0};
+    app.add_option("-f,--first", first_event, "number of events to skip")->check(CLI::PositiveNumber);
+
     int64_t n_events_to_process {0};
-    app.add_option("-e,--events", n_events_to_process, "number of events to analyse")->check(CLI::PositiveNumber);
+    app.add_option("-e,--events", n_events_to_process, "number of events to analyze")->check(CLI::PositiveNumber);
 
     std::string ascii_par {"sabat_pars.txt"};
     app.add_option("-a,--ascii", ascii_par, "ascii parameters file")->check(CLI::ExistingFile);
@@ -47,7 +50,7 @@ auto main(int argc, char** argv) -> int
 
     auto sabat = sabat::SabatMain {};
 
-    /*** Paramaters and sources ***/
+    /*** Parameters and sources ***/
     auto ascii_source = std::make_unique<spark::parameters_ascii_source>(ascii_par);
     sabat.pardb().add_source(ascii_source.get());
 

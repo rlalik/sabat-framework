@@ -19,11 +19,15 @@
 
 #pragma link C++ class SiPMRaw+;
 #pragma link C++ class SiPMCal+;
+#pragma link C++ class PhotonHit+;
 
 // containers
 
 #pragma link C++ class SabatLookup+;
 #pragma link C++ class SiPMCalPar+;
+
+// obsolete
+#pragma link C++ class SabatPixelLookup+;
 
 // clang-format on
 

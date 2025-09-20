@@ -19,7 +19,6 @@ enum class SabatCategories : std::uint8_t
     SiPMRaw = 20,      ///< SiPM raw data
     SiPMCal = 21,      ///< SiPM cal data
     PhotonHit = 22,    ///< hit
-    PhotonClus = 23,   ///< cluster
 };
 
 struct SiPMRaw : public TObject
@@ -28,8 +27,8 @@ struct SiPMRaw : public TObject
 
     int board {-1};
     int channel {-1};
-    int toa {0};
-    int tot {0};
+    float toa {0};
+    float tot {0};
 
     ClassDef(SiPMRaw, 1)
 };
@@ -44,4 +43,17 @@ struct SiPMCal : public TObject
     float energy {0};
 
     ClassDef(SiPMCal, 1)
+};
+
+struct PhotonHit : public TObject
+{
+    PhotonHit() = default;
+
+    int board {-1};
+    float x {-1};
+    float y {0};
+    float energy {0.0};
+    int mult {0};
+
+    ClassDef(PhotonHit, 1)
 };

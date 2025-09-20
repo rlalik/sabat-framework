@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   spark
   GIT_REPOSITORY https://github.com/rlalik/spark
-  GIT_TAG        refactoring
+  GIT_TAG        master
   FIND_PACKAGE_ARGS 0.1.1
 )
 

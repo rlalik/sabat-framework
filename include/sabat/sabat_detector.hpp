@@ -24,8 +24,9 @@ public:
 
     auto setup_categories(spark::category_manager& cat_mgr) -> void override
     {
-        cat_mgr.register_category(SabatCategories::SiPMRaw, "SiPMRaw", {2, 64}, true);
+        cat_mgr.register_category(SabatCategories::SiPMRaw, "SiPMRaw", {2, 64}, false);
         cat_mgr.register_category(SabatCategories::SiPMCal, "SiPMCal", {2, 64}, false);
+        cat_mgr.register_category(SabatCategories::PhotonHit, "PhotonHit", {2, 10}, false);
     }
 
     auto setup_containers(spark::database& rundb) -> void override

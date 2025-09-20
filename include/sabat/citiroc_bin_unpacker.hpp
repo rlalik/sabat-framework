@@ -53,25 +53,26 @@ public:
     {
         unpacker::init();
 
-        cat_sipm_raw = model()->build_category<SiPMRaw>(SabatCategories::SiPMRaw);
+        cat_sipm_raw = model()->template build_category<SiPMRaw>(SabatCategories::SiPMRaw);
 
         if (cat_sipm_raw == nullptr) {
             spdlog::critical("[{}] No SiPMRaw category", __PRETTY_FUNCTION__);
             return false;
         }
 
-        sabat_lookup = db()->get_container<LookupTable>("SabatLookup");
+        sabat_lookup = db()->template get_container<LookupTable>("SabatLookup");
 
         return true;
     }
 
-    auto execute(uint64_t event, uint64_t seq_number, uint16_t subevent, std::istream& source, size_t length)
-        -> bool override
+    auto execute(uint64_t /*event*/,
+                 uint64_t /*seq_number*/,
+                 uint16_t /*subevent*/,
+                 std::istream& source,
+                 size_t /*length*/) -> bool override
     {
         // spdlog::debug(" Unpack Event :  {}  SeqNim {}  SubEVT {}  Length {}", event, seq_number, subevent, length);
-        read_event(source);
-
-        return true;
+        return read_event(source);
     }
 
 private:
@@ -107,12 +108,23 @@ private:
         obj->board = mod;
         obj->channel = sipm;
         obj->toa = toa.value_or(-1);
+        if (obj->toa != -1) {  // as the 1 LSB = 0.5 ns, do conversion to ns
+            obj->toa *= 0.5;
+        }
         obj->tot = tot.value_or(-1);
+        if (obj->tot != -1) {  // as the 1 LSB = 0.5 ns, do conversion to ns
+            obj->tot *= 0.5;
+        }
     }
 
-    auto read_event(std::istream& source) -> void
+    auto read_event(std::istream& source) -> bool
     {
         auto evsize = utils::read_n_bytes<uint16_t>(2, source);
+
+        if (evsize == 0) {
+            return false;
+        }
+
         auto brd = utils::read_n_bytes<uint8_t>(1, source);
         auto trgts = utils::read_n_bytes<uint64_t>(8, source);
         auto nhits = utils::read_n_bytes<uint16_t>(2, source);
@@ -122,6 +134,8 @@ private:
         for (int i = 0; i < nhits; ++i) {
             read_hit(i, source);
         }
+
+        return true;
     }
 
 private:
