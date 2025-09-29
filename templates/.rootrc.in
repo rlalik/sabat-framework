@@ -1,0 +1,16 @@
+Rint.Load:                      rootalias.C
+Rint.Logon:                     rootlogon.C
+Rint.Logoff:                    rootlogoff.C
+# Record session commands, set to "-" to turn off command recording.
+Rint.History:                   $(HOME)/.root_sabat_hist
+
+Unix.*.Root.DynamicPath:        .:$(ROOTSYS)/lib:@SABAT_INSTALL_INCDIR@:@SPARK_INSTALL_LIBDIR@
+WinNT.*.Root.DynamicPath:       .;$(ROOTSYS)/bin:@SABAT_INSTALL_INCDIR@:@SPARK_INSTALL_LIBDIR@
+
+ACLiC.IncludePaths:             -I@SPARK_INSTALL_INCDIR@ -I@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+flagOpenGL.CanvasPreferGL:      1
+
+Viewer3D.DefaultDrawOption:     ogl
+
+X11.UseXft:                     yes
