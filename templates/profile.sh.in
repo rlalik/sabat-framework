@@ -10,3 +10,8 @@ export PATH=@CMAKE_INSTALL_FULL_BINDIR@:$PATH
 export LD_LIBRARY_PATH=@CMAKE_INSTALL_FULL_LIBDIR@:$LD_LIBRARY_PATH
 
 echo "SABAT environment ready!"
+
+function sabatwd {
+    cp @CMAKE_INSTALL_FULL_DATADIR@/sabat/.rootrc . -i
+    cp @CMAKE_INSTALL_FULL_DATADIR@/sabat/rootlogon.C . -i
+}

@@ -80,13 +80,17 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
+configure_file(templates/rootlogon.C.in ${CMAKE_CURRENT_BINARY_DIR}/rootlogon.C)
+configure_file(templates/.rootrc.in ${CMAKE_CURRENT_BINARY_DIR}/.rootrc)
 install(
     FILES
         ${PROJECT_SOURCE_DIR}/tools/draw_hists.C
-    DESTINATION ${CMAKE_INSTALL_DATADIR}
+        ${PROJECT_BINARY_DIR}/.rootrc
+        ${PROJECT_BINARY_DIR}/rootlogon.C
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/sabat
 )
 
-configure_file(profile.sh.in ${PROJECT_BINARY_DIR}/sabat_profile.sh @ONLY)
+configure_file(templates/profile.sh.in ${PROJECT_BINARY_DIR}/sabat_profile.sh @ONLY)
 install(
     FILES
         ${PROJECT_BINARY_DIR}/sabat_profile.sh

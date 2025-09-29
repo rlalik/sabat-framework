@@ -1,0 +1,11 @@
+void rootlogon(TString additional_libs           = "",
+               TString load_from_second_location = "",
+               TString personal_lib_list         = "",
+               Bool_t  test_mode                 = kFALSE)
+{
+    gSystem->Load("libspdlog");
+    gSystem->Load("libspark");
+    gSystem->Load("libsabat");
+
+    std::cout << "Welcome SABAT member, have a good day and fruitful analysis!\n";
+}
