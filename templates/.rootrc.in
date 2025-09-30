@@ -4,8 +4,8 @@ Rint.Logoff:                    rootlogoff.C
 # Record session commands, set to "-" to turn off command recording.
 Rint.History:                   $(HOME)/.root_sabat_hist
 
-Unix.*.Root.DynamicPath:        .:$(ROOTSYS)/lib:@SABAT_INSTALL_INCDIR@:@SPARK_INSTALL_LIBDIR@
-WinNT.*.Root.DynamicPath:       .;$(ROOTSYS)/bin:@SABAT_INSTALL_INCDIR@:@SPARK_INSTALL_LIBDIR@
+Unix.*.Root.DynamicPath:        .:$(ROOTSYS)/lib:@CMAKE_INSTALL_FULL_LIBDIR@:@SPARK_INSTALL_LIBDIR@
+WinNT.*.Root.DynamicPath:       .;$(ROOTSYS)/bin:@CMAKE_INSTALL_FULL_LIBDIR@:@SPARK_INSTALL_LIBDIR@
 
 ACLiC.IncludePaths:             -I@SPARK_INSTALL_INCDIR@ -I@CMAKE_INSTALL_FULL_INCLUDEDIR@
 
