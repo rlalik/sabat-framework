@@ -8,6 +8,10 @@
 #include <TH1.h>
 #include <TH2.h>
 
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
 const auto n_chan_mod_0 = 52;
 const auto n_pixel_mod_0 = 64;
 const int pixel_map_mod_0[n_pixel_mod_0] = {2,  3,  4,  5,  9,  10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 21, 22, 23,
@@ -20,6 +24,15 @@ const int pixel_map_mod_1[n_pixel_mod_1] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 
 void draw_hists(const char* file = "output_sabat.root")
 {
+    const auto input_path = fs::path(file);
+    auto pathname = input_path.parent_path();
+    if (pathname.empty()) {
+        pathname = fs::path(".");
+    }
+
+    const auto out_file = pathname / (fs::path(std::string("hist_") + input_path.filename().c_str()));
+    fmt::print("Input file : {}\nOutput file: {}\n", file, out_file.c_str());
+
     auto sabat = sabat::SabatMain {};
     sabat.init();
 
@@ -33,7 +46,7 @@ void draw_hists(const char* file = "output_sabat.root")
 
     auto cat_fibers_raw = reader.model().get_category(SabatCategories::SiPMRaw);
 
-    auto outfile = TFile::Open(std::format("hist_{}", file).c_str(), "RECREATE");
+    auto outfile = TFile::Open(out_file.c_str(), "RECREATE");
 
     auto* h_toa_mod_0 = new TH2I("h_toa_mod_0", "", 64, 0, 64, 512, 0, 256);
     auto* h_toa_mod_1 = new TH2I("h_toa_mod_1", "", 64, 0, 64, 512, 0, 256);
