@@ -53,11 +53,13 @@ public:
 
             auto new_cal_obj = cat_sipm_cal->make_object_unsafe<SiPMCal>(loc);
 
+            auto [slope, offset, some] = pm_cal->get({raw_obj->board, raw_obj->channel});
+
             new_cal_obj->board = raw_obj->board;
             new_cal_obj->channel = raw_obj->channel;
 
             new_cal_obj->toa = raw_obj->toa;
-            new_cal_obj->energy = raw_obj->tot;
+            new_cal_obj->energy = raw_obj->tot * slope + offset;
         }
 
         return true;
