@@ -112,6 +112,33 @@ target_link_libraries(sabat_analysis_exe
         CLI11::CLI11
 )
 
+
+file(TOUCH ${CMAKE_BINARY_DIR}/empty.C)
+add_executable(sabat_viewer_exe ${CMAKE_BINARY_DIR}/empty.C)
+
+ROOT_GENERATE_DICTIONARY(G__sabat_viewer_cc
+    tools/event_display.C
+    MODULE sabat_viewer_exe
+    LINKDEF tools/SabatViewerLinkDef.h
+    NO_CXXMODULE
+)
+
+add_executable(sabat::sabat_viewer ALIAS sabat_viewer_exe)
+
+set_property(TARGET sabat_viewer_exe PROPERTY OUTPUT_NAME sabat-viewer)
+
+target_compile_features(sabat_viewer_exe PRIVATE cxx_std_23)
+
+target_link_libraries(sabat_viewer_exe
+    PUBLIC
+        spdlog::spdlog
+    PRIVATE
+        sabat
+        CLI11::CLI11
+        ROOT::Eve
+        ROOT::Gui
+)
+
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)

@@ -1,5 +1,6 @@
 #include <sabat/citiroc_bin_source.hpp>
 #include <sabat/citiroc_bin_unpacker.hpp>
+#include <sabat/sabat.hpp>
 #include <sabat/sabat_categories.hpp>
 #include <sabat/sabat_detector.hpp>
 
@@ -12,8 +13,6 @@
 
 #include <CLI/CLI.hpp>
 #include <fmt/core.h>
-
-#include "sabat/sabat.hpp"
 
 auto main(int argc, char** argv) -> int
 {
