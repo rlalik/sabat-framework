@@ -14,4 +14,4 @@
 /*** Containers ***/
 
 using SabatLookup = spark::lookup_table<std::tuple<uint8_t, uint8_t>, std::tuple<uint8_t, uint8_t>>;
-using SiPMCalPar = spark::tabular_par<std::tuple<uint8_t, uint8_t>, std::tuple<int, int, double>>;
+using SiPMCalPar = spark::tabular_par<std::tuple<uint8_t, uint8_t>, std::tuple<float, float, int>>;

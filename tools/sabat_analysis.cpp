@@ -1,5 +1,6 @@
 #include <sabat/citiroc_bin_source.hpp>
-#include <sabat/citiroc_bin_unpacker.hpp>
+#include <sabat/citiroc_bin_unpacker_timing.hpp>
+#include <sabat/citiroc_bin_unpacker_spectroscopy.hpp>
 #include <sabat/sabat.hpp>
 #include <sabat/sabat_categories.hpp>
 #include <sabat/sabat_detector.hpp>
@@ -53,12 +54,30 @@ auto main(int argc, char** argv) -> int
     auto ascii_source = std::make_unique<spark::parameters_ascii_source>(ascii_par);
     sabat.pardb().add_source(ascii_source.get());
 
-    auto citiroc_unp = sabat.tasks().make_unpacker<spark::citiroc::bin_unpacker<SabatLookup>>("CitirocBinUnpacker");
-
     auto citiroc_src = std::make_shared<spark::citiroc::bin_source>();
     citiroc_src->register_hw_address(0x14520000, 0x0000);
     citiroc_src->set_input(input_file);
-    citiroc_src->add_unpacker(citiroc_unp, 0x0000);
+
+    if (citiroc_src->open()) {
+        auto hdr = citiroc_src->header();
+
+        switch (hdr->acq_mode) {
+            case 0x01: {
+                auto citiroc_unp =
+                sabat.tasks().make_unpacker<spark::citiroc::bin_unpacker_spectroscopy<SabatLookup>>("CitirocBinSpectroscopyUnpacker");
+                citiroc_src->add_unpacker(citiroc_unp, 0x0000);
+            } break;
+            case 0x02: {
+                auto citiroc_unp =
+                    sabat.tasks().make_unpacker<spark::citiroc::bin_unpacker_timing<SabatLookup>>("CitirocBinTimingUnpacker");
+                citiroc_src->add_unpacker(citiroc_unp, 0x0000);
+            } break;
+            default: {
+                spdlog::error("Citiroc Acquisition Mode not supported by any unpacker");
+                std::exit(2);
+            }
+        }
+    }
 
     sabat.add_source(citiroc_src.get());
 

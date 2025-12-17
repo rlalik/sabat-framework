@@ -27,8 +27,11 @@ struct SiPMRaw : public TObject
 
     int board {-1};
     int channel {-1};
+    int sipm {-1};
     float toa {0};
     float tot {0};
+    int lgpha {0};
+    int hgpha {0};
 
     ClassDef(SiPMRaw, 1)
 };

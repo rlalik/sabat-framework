@@ -43,8 +43,8 @@ struct event
 
 struct file_header
 {
-    std::array<std::byte, 2> firmware_ver {};
-    std::array<std::byte, 3> janus_rel {};
+    uint16_t firmware_ver {};
+    uint32_t janus_rel {};
     uint16_t board_id {};
     uint16_t run {};
     uint8_t acq_mode {};

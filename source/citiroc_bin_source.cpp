@@ -30,8 +30,8 @@ auto read_file_header(std::istream& source) -> types::file_header
 {
     types::file_header fheader;
 
-    fheader.firmware_ver = utils::read_n_bytes<2>(source);
-    fheader.janus_rel = utils::read_n_bytes<3>(source);
+    fheader.firmware_ver = std::byteswap(utils::read_n_bytes<uint16_t>(2, source));
+    fheader.janus_rel = std::byteswap(utils::read_n_bytes<uint32_t>(3, source)) >> 8;
     fheader.board_id = utils::read_n_bytes<uint16_t>(2, source);
     fheader.run = utils::read_n_bytes<uint16_t>(2, source);
     fheader.acq_mode = utils::read_n_bytes<uint8_t>(1, source);
@@ -46,6 +46,10 @@ auto read_file_header(std::istream& source) -> types::file_header
 
 auto bin_source::open() -> bool
 {
+    if (fheader.firmware_ver > 0) {
+        return true;  // already open
+    }
+
     source = std::ifstream(file, std::ios_base::binary);
 
     if (!source) {
@@ -61,12 +65,10 @@ auto bin_source::open() -> bool
     spdlog::info(
         " Firmware: {:#06x}  Janus: {:#08x}:  Board {:#06x}:  Run {:#06x}:  AcqMode {:#04x} "
         " EHnB {:#06x}  Tunit " "{:#04x}  Tlsb {:#010x}  TS {:#018x}",
-        spdlog::to_hex(fheader.firmware_ver), spdlog::to_hex(fheader.janus_rel),
-        fheader.board_id, fheader.run, fheader.acq_mode, fheader.e_hists_nbins,
-        fheader.toa_tot_unit, fheader.time_lsb, fheader.run_timestamp);
+        fheader.firmware_ver, fheader.janus_rel, fheader.board_id, fheader.run, fheader.acq_mode,
+        fheader.e_hists_nbins, fheader.toa_tot_unit, fheader.time_lsb, fheader.run_timestamp);
 
-    hwid = fheader.board_id;
-    hwid <<= 16u;
+    hwid = fheader.board_id << 16u;
 
     vaddr = get_vadrr(hwid);
 

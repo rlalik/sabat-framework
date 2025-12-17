@@ -52,6 +52,8 @@ public:
 
     auto skip_to_event(int64_t new_event) -> void;
 
+    auto header() const -> const types::file_header* { return &fheader; }
+
 private:
     auto get_n_events() -> int64_t;
 

@@ -36,18 +36,18 @@ namespace citiroc
 {
 
 template<typename LookupTable>
-class SABAT_EXPORT bin_unpacker : public unpacker
+class SABAT_EXPORT bin_unpacker_timing : public unpacker
 {
 public:
     using unpacker::unpacker;
 
-    bin_unpacker(const bin_unpacker&) = delete;
-    bin_unpacker(bin_unpacker&&) = delete;
+    bin_unpacker_timing(const bin_unpacker_timing&) = delete;
+    bin_unpacker_timing(bin_unpacker_timing&&) = delete;
 
-    auto operator=(const bin_unpacker&) -> bin_unpacker& = delete;
-    auto operator=(bin_unpacker&&) -> bin_unpacker& = delete;
+    auto operator=(const bin_unpacker_timing&) -> bin_unpacker_timing& = delete;
+    auto operator=(bin_unpacker_timing&&) -> bin_unpacker_timing& = delete;
 
-    ~bin_unpacker() override = default;
+    ~bin_unpacker_timing() override = default;
 
     auto init() -> bool override
     {
@@ -106,7 +106,8 @@ private:
         }
 
         obj->board = mod;
-        obj->channel = sipm;
+        obj->channel = channel;
+        obj->sipm = sipm;
         obj->toa = toa.value_or(-1);
         if (obj->toa != -1) {  // as the 1 LSB = 0.5 ns, do conversion to ns
             obj->toa *= 0.5;
